@@ -3,13 +3,13 @@ package test.scottsFunctionality;
 import cps3230WebAutomation.CategoriesPage;
 import cps3230WebAutomation.HomePage;
 import cps3230WebAutomation.OnlineShoppingPage;
+import cps3230WebAutomation.SearchPage;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -24,6 +24,7 @@ public class ProductCategoriesSteps {
     OnlineShoppingPage shoppingPage;
     CategoriesPage categoriesPage;
     WebDriverWait wait;
+    SearchPage searchPage;
     @Before
     public void setup(){
         System.setProperty("webdriver.chrome.driver", "/home/krissal1234/Documents/projects/uni/software_testing/chromedriver");
@@ -33,11 +34,12 @@ public class ProductCategoriesSteps {
         homePage = new HomePage(driver,wait);
         shoppingPage = new OnlineShoppingPage(driver, wait);
         categoriesPage = new CategoriesPage(driver,wait);
+        searchPage = new SearchPage(driver,wait);
 
     }
     @After
     public void tearDown(){
-        driver.quit();
+       driver.quit();
     }
     @Given("I am a user of the website")
     public void iAmAUserOfTheWebsite()  {
@@ -63,7 +65,7 @@ public class ProductCategoriesSteps {
 
     @And("the category should show at least {int} products")
     public void theCategoryShouldShowAtLeastMinProductCountProducts(int numOfProducts) {
-        Assertions.assertTrue( categoriesPage.countProducts() >= numOfProducts);
+        Assertions.assertTrue( categoriesPage.returnProducts() >= numOfProducts);
     }
     @When("I click on the first product in the results")
     public void iClickOnTheFirstProductInTheResults() {
@@ -77,6 +79,24 @@ public class ProductCategoriesSteps {
         Assertions.assertTrue(categoriesPage.checkProductImageAndPrice());
     }
 
+
+
+    @When("I search for a product using the term {string}")
+    public void iSearchForAProductUsingTheTerm(String searchField)  {
+        homePage.searchForItem(searchField);
+    }
+
+    @Then("I should see the search results")
+    public void iShouldSeeTheSearchResults() throws InterruptedException {
+
+        Assertions.assertFalse(searchPage.getSearchResults().isEmpty());
+
+    }
+
+    @And("there should be at least {int} products in the search results")
+    public void thereShouldBeAtLeastMinProductCountProductsInTheSearchResults(int minProductCount) {
+        Assertions.assertTrue(searchPage.getSearchResults().size() > minProductCount);
+    }
 
 
 }

@@ -20,7 +20,7 @@ public class CategoriesPage {
         WebElement currentCatElement = driver.findElement(By.cssSelector("li.current-cat > a"));
         return currentCatElement.getText();
     }
-    public int countProducts() {
+    public int returnProducts() {
         List<WebElement> products = driver.findElements(By.cssSelector("ul.products > li.product.type-product"));
 
         return products.size();
@@ -37,7 +37,8 @@ public class CategoriesPage {
         }
     }
 
-    public boolean checkProductImageAndPrice( ) {
+    //Change name
+    public boolean checkProductImageAndPrice() {
 
         //Image
         List<WebElement> imageElements = driver.findElements(By.cssSelector("a[data-elementor-open-lightbox='no'] > img.attachment-woocommerce_single"));
