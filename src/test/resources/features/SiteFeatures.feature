@@ -36,5 +36,5 @@ Feature: Reachability of product categories
     Examples:
       | searchTerm | minProductCount |
       | bread       | 5              |
-      |beer         |6               |
+      | beer         |6               |
 
