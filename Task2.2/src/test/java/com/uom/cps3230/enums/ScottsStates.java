@@ -2,9 +2,9 @@ package com.uom.cps3230.enums;
 
 public enum ScottsStates {
     HOME,
-    SEARCH,
+    SEARCH_RESULTS,
     SHOPPING_CART,
+    LOGIN,
     PRODUCT_DETAILS,
-    CHECKOUT
 
 }
