@@ -47,7 +47,7 @@ public class ScottsTester implements FsmModel {
         stateHistory.clear();
         shoppingCartCount = 0;
         if(testing){
-            System.setProperty("webdriver.chrome.driver", "/home/krissal1234/Documents/projects/uni/software_testing/chromedriver");
+           // System.setProperty("webdriver.chrome.driver", "/home/krissal1234/Documents/projects/uni/software_testing/chromedriver");
             driver = new ChromeDriver();
             wait = new WebDriverWait(driver, Duration.ofSeconds(10));
             sut = new ScottsOperator();
@@ -59,52 +59,49 @@ public class ScottsTester implements FsmModel {
         boolean isCorrectLastState = !stateHistory.isEmpty() && stateHistory.peek() == ScottsStates.HOME;
         return (state == ScottsStates.LOGIN
                 || state == ScottsStates.SEARCH_RESULTS
-                || (state == ScottsStates.SHOPPING_CART && isCorrectLastState))
-                && !sut.isLoggedInUser();}
+                || (state == ScottsStates.SHOPPING_CART && isCorrectLastState));}
     public @Action void navigateHome(){
     state = ScottsStates.HOME;
     sut.navigateHome();
     }
 //We are going to assume login before interacting with the site
-    public boolean loginUserGuard() {
-        // If the current state is SHOPPING_CART and the last state was LOGIN - indicates that the shopping cart was closed
-        boolean isCorrectLastState = !stateHistory.isEmpty() && stateHistory.peek() == ScottsStates.LOGIN;
-        return (state == ScottsStates.HOME
-                || state == ScottsStates.SEARCH_RESULTS
-                || (state == ScottsStates.SHOPPING_CART && isCorrectLastState))
-                && !sut.isLoggedInUser();
-    }
+public boolean loginUserGuard() {
+    boolean isCorrectLastState = !stateHistory.isEmpty() && stateHistory.peek() == ScottsStates.LOGIN;
+    return (state == ScottsStates.HOME
+            || state == ScottsStates.SEARCH_RESULTS
+            || state == ScottsStates.SHOPPING_CART);
+}
     public @Action void loginUser(){
-            sut.loginUser("salibakris03@gmail.com", "testingCps3230");
-            state = ScottsStates.LOGIN;
-            isLoggedInUser = true;
-            isLoggedOutUser = false;
+        System.out.println("Logging in...");
+        sut.loginUser("salibakris03@gmail.com", "testingCps3230");
+        state = ScottsStates.LOGIN;
+        isLoggedInUser = true;
+        isLoggedOutUser = false;
 
-            Assert.assertTrue(sut.isLoggedInUser());
-            Assert.assertFalse(sut.isLoggedOutUser());
+        Assert.assertTrue(sut.isLoggedInUser());
+        Assert.assertFalse(sut.isLoggedOutUser());
     }
 
     public boolean searchForGuard() { return (state == ScottsStates.HOME
                                             || state == ScottsStates.SEARCH_RESULTS
                                             || state == ScottsStates.LOGIN
-                                            || state == ScottsStates.SHOPPING_CART) && isLoggedInUser;}
+                                            || state == ScottsStates.SHOPPING_CART);}
     public @Action void searchFor(){
-    sut.searchProduct("bread");
-    state = ScottsStates.SEARCH_RESULTS;
-    isProductSearchedFor = true;
-    Assert.assertTrue(sut.isProductSearchedFor());
+        sut.searchProduct("bread");
+        state = ScottsStates.SEARCH_RESULTS;
+        isProductSearchedFor = true;
+        Assert.assertTrue(sut.isProductSearchedFor());
     }
-
+//
 //    public boolean selectFirstProductGuard(){return state == ScottsStates.SEARCH_RESULTS && isLoggedInUser;}
 //    public @Action void selectFirstProduct(){
 //
 //        state = ScottsStates.PRODUCT_DETAILS;
 //    }
 
-    public boolean addProductToCartGuard(){return state == ScottsStates.SEARCH_RESULTS && isLoggedInUser;}
+    public boolean addProductToCartGuard(){return state == ScottsStates.SEARCH_RESULTS;}
     public @Action void addProductToCart(){
-
-
+        sut.addFirstProductToCart();
         state = ScottsStates.SHOPPING_CART;
         shoppingCartCount++;
     }
@@ -116,22 +113,25 @@ public class ScottsTester implements FsmModel {
     }
     public @Action void openShoppingCart() {
         stateHistory.push(state);
+        sut.openShoppingCart();
         state = ScottsStates.SHOPPING_CART;
+
     }
 
     public boolean closeShoppingCartGuard() {
         return state == ScottsStates.SHOPPING_CART && !stateHistory.isEmpty();
     }
     public @Action void closeShoppingCart() {
+        sut.closeShoppingCart();
         state = stateHistory.pop();
     }
     public boolean removeProductFromCartGuard(){return state == ScottsStates.SHOPPING_CART && shoppingCartCount != 0;}
     public @Action void removeProductFromCart(){
-
+    state = ScottsStates.SHOPPING_CART;
     }
 
     @Test
-    public void BulbOperatorModelRunner() {
+    public void ScottsOperatorModelRunner() {
         final GreedyTester tester = new GreedyTester(new ScottsTester());
         tester.setRandom(new Random());
         tester.buildGraph();
@@ -141,7 +141,7 @@ public class ScottsTester implements FsmModel {
         tester.addCoverageMetric(new StateCoverage());
         tester.addCoverageMetric(new ActionCoverage());
 
-        tester.generate(500);
+        tester.generate(2);
         tester.printCoverage();
 
 

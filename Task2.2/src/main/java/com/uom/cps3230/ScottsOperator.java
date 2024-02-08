@@ -32,77 +32,104 @@ public class ScottsOperator {
 //    private boolean isLoggedInUser;
 
 
+    public ScottsOperator() {
+        //  System.setProperty("webdriver.chrome.driver", "/home/krissal1234/Documents/projects/uni/software_testing/chromedriver");
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Kris Saliba\\Desktop\\UoM\\yr3\\testing\\chromedriver.exe");
 
-    public ScottsOperator(){
-        System.setProperty("webdriver.chrome.driver", "/home/krissal1234/Documents/projects/uni/software_testing/chromedriver");
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         homePage = new HomePage(driver, wait);
 
     }
-    public void navigateHome(){
+
+    public void navigateHome() {
         WebElement homeLink = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("a.elementor-item[href='https://www.scotts.com.mt/']")));
         homeLink.click();
     }
-   public void loginUser(String username,String password)  {
+
+    public void loginUser(String username, String password) {
         homePage.navigateToHomePage();
 
-            //Navigate to login page
-           WebElement myAccountIcon = wait.until(ExpectedConditions.elementToBeClickable(
-                   By.cssSelector("a.my-account-icon[href='https://www.scotts.com.mt/my-account/']")));
-           myAccountIcon.click();
+        //Navigate to login page
+        WebElement myAccountIcon = wait.until(ExpectedConditions.elementToBeClickable(
+                By.cssSelector("a.my-account-icon[href='https://www.scotts.com.mt/my-account/']")));
+        myAccountIcon.click();
 
 
-           WebElement usernameInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("username")));
-           usernameInput.sendKeys(username);
+        WebElement usernameInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("username")));
+        usernameInput.sendKeys(username);
 
-           // Wait for the password input field to be visible and then input the password
-           WebElement passwordInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("password")));
-           passwordInput.sendKeys(password);
+        // Wait for the password input field to be visible and then input the password
+        WebElement passwordInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("password")));
+        passwordInput.sendKeys(password);
 
-           // Find and click the login button
-           WebElement loginButton = driver.findElement(By.name("login"));
-           loginButton.click();
+        // Find and click the login button
+        WebElement loginButton = driver.findElement(By.name("login"));
+        loginButton.click();
 
 
-           isLoggedInUser = true;
-           isLoggedOutUser = false;
+        isLoggedInUser = true;
+        isLoggedOutUser = false;
 
     }
-    public boolean isLoggedInUser(){
+
+    public boolean isLoggedInUser() {
         return isLoggedInUser;
     }
-    public boolean isLoggedOutUser(){
+
+    public boolean isLoggedOutUser() {
         return isLoggedOutUser;
     }
 
-    public void searchProduct(String product){
+    public void searchProduct(String product) {
         WebElement searchButton = driver.findElement(By.id("header-search-icon"));
         searchButton.click();
 
         WebElement searchInput = driver.findElement(By.id("dgwt-wcas-search-input-1"));
+
+        // Clear any existing text
+        searchInput.clear();
+
         searchInput.sendKeys(product);
 
         searchInput.sendKeys(Keys.ENTER);
         isProductSearchedFor = true;
     }
-    public boolean isProductSearchedFor(){
+
+    public boolean isProductSearchedFor() {
         return isProductSearchedFor;
     }
-    public void selectFirstProduct(){
+
+    public void selectFirstProduct() {
         List<WebElement> products = driver.findElements(By.cssSelector("ul.products > li.product.type-product"));
 
         WebElement firstProduct = wait.until(ExpectedConditions.elementToBeClickable(products.get(0)));
         firstProduct.click();
     }
-   public void addFirstProductToCart(){
-        List<WebElement> products = driver.findElements(By.cssSelector("ul.products > li.product.type-product"));
 
-            //WebElement firstProduct = wait.until(ExpectedConditions.elementToBeClickable(products.get(0)));
-            //firstProduct.click();
+    public void addFirstProductToCart() {
+        List<WebElement> addToCartButtons = driver.findElements(By.cssSelector("a.loop-add-to-cart-btn"));
+
+        if (addToCartButtons.size() > 0) {
+            WebElement firstAddToCartButton = addToCartButtons.get(0);
+
+            WebElement clickableAddToCartButton = wait.until(ExpectedConditions.elementToBeClickable(firstAddToCartButton));
+
+            clickableAddToCartButton.click();
+        }
     }
 
+    public void openShoppingCart() {
+        WebElement shoppingCartButton = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("a.shopping-bag-button[href*='cart']")));
 
+        shoppingCartButton.click();
+    }
+
+    public void closeShoppingCart() {
+
+    WebElement closeButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("close-cart-sidebar-btn")));
+    closeButton.click();
+    }
     public void removeFirstProductFromCart(){
 
     }
