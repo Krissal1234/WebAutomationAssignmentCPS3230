@@ -26,6 +26,7 @@ public class ScottsOperator {
     private boolean isSearchResults = false;
     private boolean isProductSelected = false;
     private boolean isHomePage = false;
+    private boolean isShoppingCartOpen = false;
 
 //    private boolean ;
 //    private boolean isLoggedInUser;
@@ -85,6 +86,7 @@ public class ScottsOperator {
         } catch (TimeoutException e) {
             isLoggedInUser = false;
             isSearchResults = false;
+            isShoppingCartOpen = false;
         }
     }
     public boolean isLoggedInUser() {
@@ -98,6 +100,7 @@ public class ScottsOperator {
        if(verifyLogout()) {
            isLoggedInUser = false;
            isSearchResults = false;
+           isShoppingCartOpen = false;
        }
 
     }
@@ -121,6 +124,7 @@ public class ScottsOperator {
         if(verifySearchProduct()){
             isSearchResults = true;
             isHomePage = false;
+            isShoppingCartOpen = false;
         }
     }
     private boolean verifySearchProduct(){
@@ -139,63 +143,43 @@ public class ScottsOperator {
     public boolean isSearchResults() {
         return isSearchResults;
     }
-//
-//    public void selectFirstProduct() {
-//        List<WebElement> products = driver.findElements(By.cssSelector("ul.products > li.product.type-product"));
-//
-//        WebElement firstProduct = wait.until(ExpectedConditions.elementToBeClickable(products.get(0)));
-//        firstProduct.click();
-//    }
+
 
     public void addFirstProductToCart() {
-        List<WebElement> addToCartButtons = driver.findElements(By.cssSelector("a.loop-add-to-cart-btn"));
-
-        if (addToCartButtons.size() > 0) {
-            WebElement firstAddToCartButton = addToCartButtons.get(0);
-
-            WebElement clickableAddToCartButton = wait.until(ExpectedConditions.elementToBeClickable(firstAddToCartButton));
-
-            clickableAddToCartButton.click();
+        searchPage.addFirstProductToCartFromSearchResults();
+        if(verifyOpenShoppingCart()){
+            isShoppingCartOpen = true;
         }
     }
-//    //Cart must be open to use this method
-//    public int getNumberOfItemsInCart() {
-//        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("li.woocommerce-mini-cart-item")));
-//
-//        List<WebElement> cartItems = driver.findElements(By.cssSelector("li.woocommerce-mini-cart-item"));
-//
-//        return cartItems.size();
-//    }
-//
+
     public void openShoppingCart() {
-        WebElement shoppingCartButton = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("a.shopping-bag-button[href*='cart']")));
-        shoppingCartButton.click();
+        nav.navigateToShoppingCart();
+        if(verifyOpenShoppingCart()){
+            isShoppingCartOpen = true;
+        }
+    }
+
+    private boolean verifyOpenShoppingCart(){
+        try {
+            WebElement shoppingCartTitle = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".cart-sidebar-title")));
+            boolean isShoppingCartPresent = shoppingCartTitle.getText().equalsIgnoreCase("Shopping cart");
+
+            return isShoppingCartPresent;
+        } catch (Exception e) {
+            System.out.println("Shopping cart verification failed: " + e.getMessage());
+            return false;
+        }
     }
 
     public void closeShoppingCart() {
 
-    WebElement closeButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("close-cart-sidebar-btn")));
-    closeButton.click();
+       nav.closeShoppingCart();
+       isShoppingCartOpen = false;
+    }
+    public boolean isShoppingCartOpen(){
+        return isShoppingCartOpen;
     }
 
-//    public void clickCheckout(){
-//        WebElement checkoutButton = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("a.button.checkout.wc-forward.wp-element-button")));
-//        checkoutButton.click();
-//    }
-//    public void removeFirstProductFromCart() {
-//        WebElement quantityInput = driver.findElement(By.cssSelector("li.woocommerce-mini-cart-item:first-child .qty"));
-//        int quantity = Integer.parseInt(quantityInput.getAttribute("value"));
-//
-//        if (quantity > 1) {
-//            // If the quantity is greater than 1, find and click the "minus" button
-//            WebElement minusButton = driver.findElement(By.cssSelector("li.woocommerce-mini-cart-item:first-child .mini-cart-product-qty[data-qty='minus']"));
-//            minusButton.click();
-//        } else {
-//            // If the quantity is 1, find and click the "remove" button (×)
-//            WebElement removeButton = driver.findElement(By.cssSelector("li.woocommerce-mini-cart-item:first-child .remove"));
-//            removeButton.click();
-//        }
-//    }
     public void closeBrowser() {
         if (driver != null) {
             try {

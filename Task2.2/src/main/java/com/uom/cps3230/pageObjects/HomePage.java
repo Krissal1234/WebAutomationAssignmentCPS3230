@@ -15,24 +15,4 @@ public class HomePage {
         driver.get("https://www.scotts.com.mt/");
         driver.manage().window().maximize();
     }
-
-
-    public void clickShopOnline(){
-        WebElement shopOnlineLink = driver.findElement(By.xpath("//li[@class='menu-item menu-item-type-post_type menu-item-object-page menu-item-1546']/a[text()='Shop Online']"));
-        shopOnlineLink.click();
-    }
-
-    public void searchForItem(String item){
-        //Mention in teh report, I alwasy used id whenever i could
-        WebElement searchButton = driver.findElement(By.id("header-search-icon"));
-        searchButton.click();
-
-        WebElement searchInput = driver.findElement(By.id("dgwt-wcas-search-input-1"));
-        searchInput.sendKeys(item);
-
-        searchInput.sendKeys(Keys.ENTER);
-    }
-
-
-
 }

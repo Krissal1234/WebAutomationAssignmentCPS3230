@@ -17,10 +17,6 @@ public class SearchPage {
         this.driver = driver;
         this.wait = wait;
     }
-    // Mention Page Object Model: Organize your testing code using the Page Object Model.
-    // This means creating separate classes for each page of your application, with methods that represent the actions
-    // that can be performed on that page.
-
     public void searchForProductFromSearchPage(String product){
         WebElement searchInput = driver.findElement(By.id("dgwt-wcas-search-input-1"));
 
@@ -31,5 +27,15 @@ public class SearchPage {
         searchInput.sendKeys(Keys.ENTER);
     }
 
+    public void addFirstProductToCartFromSearchResults() {
+        List<WebElement> addToCartButtons = driver.findElements(By.cssSelector("a.loop-add-to-cart-btn"));
+
+        if (addToCartButtons.size() > 0) {
+            WebElement firstAddToCartButton = addToCartButtons.get(0);
+            WebElement clickableAddToCartButton = wait.until(ExpectedConditions.elementToBeClickable(firstAddToCartButton));
+
+            clickableAddToCartButton.click();
+        }
+    }
 
 }

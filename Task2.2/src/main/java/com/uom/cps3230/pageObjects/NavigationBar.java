@@ -10,10 +10,10 @@ public class NavigationBar {
 
     WebDriverWait wait;
     WebDriver driver;
+
     public NavigationBar(WebDriver driver, WebDriverWait wait){
         this.driver = driver;
         this.wait = wait;
-
     }
 
     public void navigateToLoginPage(){
@@ -26,5 +26,14 @@ public class NavigationBar {
 
         WebElement searchIcon = wait.until(ExpectedConditions.elementToBeClickable(searchIconLocator));
         searchIcon.click();
+    }
+    public void navigateToShoppingCart(){
+        WebElement shoppingCartButton = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("a.shopping-bag-button[href*='cart']")));
+        shoppingCartButton.click();
+    }
+
+    public void closeShoppingCart(){
+        WebElement closeButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("close-cart-sidebar-btn")));
+        closeButton.click();
     }
 }
