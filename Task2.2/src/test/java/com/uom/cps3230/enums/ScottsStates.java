@@ -5,6 +5,7 @@ public enum ScottsStates {
     SEARCH_RESULTS,
     SHOPPING_CART,
     LOGIN,
-    PRODUCT_DETAILS,
+    CHECKOUT,
+
 
 }

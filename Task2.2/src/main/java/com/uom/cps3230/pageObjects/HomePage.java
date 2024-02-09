@@ -17,7 +17,6 @@ public class HomePage {
     }
 
 
-
     public void clickShopOnline(){
         WebElement shopOnlineLink = driver.findElement(By.xpath("//li[@class='menu-item menu-item-type-post_type menu-item-object-page menu-item-1546']/a[text()='Shop Online']"));
         shopOnlineLink.click();
