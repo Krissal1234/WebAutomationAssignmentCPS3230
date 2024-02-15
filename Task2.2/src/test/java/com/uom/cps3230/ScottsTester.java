@@ -31,14 +31,11 @@ public class ScottsTester implements FsmModel {
     private static WebDriverWait wait;
     ScottsOperator sut = new ScottsOperator();
     ScottsStates state = ScottsStates.HOME;
-    private int shoppingCartCount = 0;
+
     private Deque<ScottsStates> stateHistory = new ArrayDeque<>();
-
-    private boolean isLoggedInUser = false;
-    private boolean firstAccess = true;
-
     private boolean isProductSearchedFor = false;
-    private boolean isShoppingCartOpen = false;
+    private boolean isLoggedInUser = false;
+
 
     @Override
     public Object getState() {
@@ -50,8 +47,9 @@ public class ScottsTester implements FsmModel {
         System.out.println("Resetting...");
         state = ScottsStates.HOME;
         stateHistory.clear();
-        shoppingCartCount = 0;
         isLoggedInUser = false;
+
+
         if(testing){
             sut = new ScottsOperator();
             sut.openScottsWebsite();
@@ -74,7 +72,7 @@ public class ScottsTester implements FsmModel {
                 || state == ScottsStates.SHOPPING_CART) && !isLoggedInUser);
     }
     public @Action void loginUser(){
-        System.out.println("Logging in...");
+        System.out.println("Logging in... user logged in =" +isLoggedInUser + "current state="+ state);
         sut.loginUser("salibakris03@gmail.com", "testingCps3230");
         state = ScottsStates.LOGIN;
         isLoggedInUser = true;
@@ -87,12 +85,14 @@ public class ScottsTester implements FsmModel {
         || state == ScottsStates.SHOPPING_CART) && isLoggedInUser);
     }
     public @Action void logoutUser(){
-        System.out.println("Logging out...");
+        System.out.println("Logging out... USER ISLOGGEDIN = "+isLoggedInUser  + "current state="+ state);
 
         sut.logoutUser();
         state = ScottsStates.LOGIN;
         isLoggedInUser = false;
-        Assert.assertTrue(!sut.isLoggedInUser());
+        Assert.assertFalse(sut.isLoggedInUser());
+
+
     }
     //------SEARCH--------
     public boolean searchForGuard() { return ((state == ScottsStates.HOME
@@ -105,6 +105,7 @@ public class ScottsTester implements FsmModel {
         state = ScottsStates.SEARCH_RESULTS;
         isProductSearchedFor = true;
         Assert.assertTrue(sut.isSearchResults());
+
     }
     //------SHOPPING CART--------
     public boolean addProductToCartGuard(){return state == ScottsStates.SEARCH_RESULTS;}
@@ -113,7 +114,7 @@ public class ScottsTester implements FsmModel {
         sut.addFirstProductToCart();
         state = ScottsStates.SHOPPING_CART;
 
-        //If an item is added to cart, cart opens automatically
+        //If an item is added to cart, cart opens automatically, so we can check if cart is open
         Assert.assertTrue(sut.isShoppingCartOpen());
 
     }

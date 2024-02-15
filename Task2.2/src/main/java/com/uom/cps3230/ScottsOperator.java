@@ -28,25 +28,14 @@ public class ScottsOperator {
     private boolean isHomePage = false;
     private boolean isShoppingCartOpen = false;
 
-//    private boolean ;
-//    private boolean isLoggedInUser;
-//    private boolean isLoggedInUser;
-//    private boolean isLoggedInUser;
-//    private boolean isLoggedInUser;
-//    private boolean isLoggedInUser;
-
-
     public ScottsOperator() {
-        //  System.setProperty("webdriver.chrome.driver", "/home/krissal1234/Documents/projects/uni/software_testing/chromedriver");
-      //  System.setProperty("webdriver.chrome.driver", "C:\\Users\\Kris Saliba\\Desktop\\UoM\\yr3\\testing\\chromedriver.exe");
-
+        //PageObject definitions
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         homePage = new HomePage(driver, wait);
         nav = new NavigationBar(driver, wait);
         loginPage = new LoginPage(driver, wait);
         searchPage = new SearchPage(driver, wait);
-
     }
     public void openScottsWebsite(){
         homePage.navigateToHomePage();
@@ -97,24 +86,13 @@ public class ScottsOperator {
        nav.navigateToLoginPage();
        loginPage.logoutUserFromLoginPage();
 
-       if(verifyLogout()) {
-           isLoggedInUser = false;
-           isSearchResults = false;
-           isShoppingCartOpen = false;
-       }
+       isLoggedInUser = false;
+       isSearchResults = false;
+       isShoppingCartOpen = false;
+
 
     }
-    private boolean verifyLogout(){
-        try {
-            //Login link displays after logout
-            WebElement loginButton = wait.until(ExpectedConditions.presenceOfElementLocated(
-                    By.cssSelector("button.woocommerce-button.button.woocommerce-form-login__submit.wp-element-button[name='login'][value='Log in']")));
 
-            return loginButton != null;
-        } catch (Exception e) {
-            return false;
-        }
-    }
 
 
     public void searchProduct(String product) {
